@@ -180,7 +180,7 @@ dialog::backdrop{background:rgba(20,20,20,.55)}
 </head>
 <body>
 <header class="top">
-  <div class="brand"><span class="sq" aria-hidden="true"></span><span>Grandma's<br>Bakery</span></div>
+  <div class="brand"><span>Grandma's<br>Bakery</span></div>
   <nav class="tabs" aria-label="Sections"></nav>
 </header>
 <main class="wrap" id="app" aria-live="polite"></main>
@@ -209,11 +209,13 @@ const DEFAULTS = {
     {id:"bananas",name:"Ripe bananas",emoji:"🍌",unit:"bananas",qty:5,low:3,price:0.30}
   ],
   recipes:[
-    {id:"cookies",name:"Chocolate chip cookies",emoji:"🍪",makes:"24 cookies",items:[["flour",2.25],["butter",2],["sugar",0.75],["brown",0.75],["eggs",2],["vanilla",1],["soda",1],["salt",1],["chips",2]]},
-    {id:"pie",name:"Apple pie",emoji:"🥧",makes:"1 pie",items:[["flour",2.5],["butter",2],["sugar",0.75],["apples",6],["cinnamon",1],["salt",1]]},
-    {id:"muffins",name:"Blueberry muffins",emoji:"🧁",makes:"12 muffins",items:[["flour",2],["sugar",1],["butter",1],["eggs",2],["milk",0.5],["berries",2],["soda",1],["salt",0.5]]},
-    {id:"lemon",name:"Lemon loaf",emoji:"🍋",makes:"1 loaf",items:[["flour",1.5],["sugar",1],["butter",1],["eggs",2],["lemons",2],["milk",0.5]]},
-    {id:"banana",name:"Banana bread",emoji:"🍞",makes:"1 loaf",items:[["flour",2],["brown",0.75],["butter",1],["eggs",2],["bananas",3],["soda",1],["salt",0.5],["cinnamon",1]]}
+    // {id:"cookies",name:"Chocolate chip cookies",emoji:"🍪",makes:"24 cookies",items:[["flour",2.25],["butter",2],["sugar",0.75],["brown",0.75],["eggs",2],["vanilla",1],["soda",1],["salt",1],["chips",2]]},
+    {id: "parfait", name:"Berry-licious Parfait", emoji: "", makes: "3", itmes:[["sliced almonds", 6],["honey", 3], ["cream", 2], ["lemon zest", 1], ["vanilla extract", 1], ["condensed milk", 1.75], ["berry compote", 1]]},
+    
+    // {id:"pie",name:"Apple pie",emoji:"🥧",makes:"1 pie",items:[["flour",2.5],["butter",2],["sugar",0.75],["apples",6],["cinnamon",1],["salt",1]]},
+    // {id:"muffins",name:"Blueberry muffins",emoji:"🧁",makes:"12 muffins",items:[["flour",2],["sugar",1],["butter",1],["eggs",2],["milk",0.5],["berries",2],["soda",1],["salt",0.5]]},
+    // {id:"lemon",name:"Lemon loaf",emoji:"🍋",makes:"1 loaf",items:[["flour",1.5],["sugar",1],["butter",1],["eggs",2],["lemons",2],["milk",0.5]]},
+    // {id:"banana",name:"Banana bread",emoji:"🍞",makes:"1 loaf",items:[["flour",2],["brown",0.75],["butter",1],["eggs",2],["bananas",3],["soda",1],["salt",0.5],["cinnamon",1]]}
   ],
   plan:{},
   customers:[
@@ -314,9 +316,9 @@ function toast(msg){
 }
 
 /* ---------- nav ---------- */
-const TABS=[["bake","🧑‍🍳","Bake"],["pantry","🥫","Pantry"],["recipes","📖","Recipes"],["customers","💝","Regulars"],["suppliers","🛍️","Suppliers"]];
+const TABS=[["bake","Bake"],["pantry","Pantry"],["recipes","Recipes"],["customers","Regulars"],["suppliers","Suppliers"]];
 function renderNav(){
-  $("nav.tabs").innerHTML=TABS.map(([id,e,l])=>`<button class="tab" data-act="tab" data-id="${id}" ${ui.tab===id?'aria-current="page"':""}><span class="e" aria-hidden="true">${e}</span>${l}</button>`).join("");
+  $("nav.tabs").innerHTML=TABS.map(([id,l])=>`<button class="tab" data-act="tab" data-id="${id}" ${ui.tab===id?'aria-current="page"':""}>${l}</button>`).join("");
 }
 
 /* ---------- render ---------- */
@@ -346,7 +348,6 @@ function planHTML(){
     return `<div class="card slide ${n?"on":""}">
       <div class="tile t${k%4}" aria-hidden="true">${r.emoji}</div>
       <div class="body">
-        <div class="part"><span>No.</span><b>${String(k+1).padStart(2,"0")}</b></div>
         <div class="name">${esc(r.name)}</div>
         <div class="sub serif">Makes ${esc(r.makes)}</div>
         <div class="stepper">
