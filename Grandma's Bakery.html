@@ -217,7 +217,14 @@ const DEFAULTS = {
     {id:"compote",name:"Berry compote",emoji:"🫐",unit:"cups",qty:1,low:1,price:2.50},
     {id:"strawberries",name:"Fresh strawberries",emoji:"🍓",unit:"lbs",qty:1,low:1,price:3.00},
     {id:"graham",name:"Graham cracker crumbs",emoji:"🍪",unit:"cups",qty:1.5,low:1,price:0.80},
-    {id:"creamcheese",name:"Cream cheese",emoji:"🧀",unit:"8-oz blocks",qty:2,low:2,price:2.50}
+    {id:"creamcheese",name:"Cream cheese",emoji:"🧀",unit:"8-oz blocks",qty:2,low:2,price:2.50},
+    {id:"hazelnuts",name:"Skinned hazelnuts",emoji:"🌰",unit:"cups",qty:1,low:0.5,price:2.50},
+    {id:"pumpkin",name:"Canned pumpkin purée",emoji:"🎃",unit:"cups",qty:1.75,low:1,price:0.90},
+    {id:"sourcream",name:"Sour cream",emoji:"🥛",unit:"tbsp",qty:8,low:2,price:0.15},
+    {id:"ginger",name:"Ground ginger",emoji:"🫚",unit:"tsp",qty:5,low:2,price:0.25},
+    {id:"cloves",name:"Ground cloves",emoji:"🪵",unit:"tsp",qty:3,low:1,price:0.30},
+    {id:"nutmeg",name:"Ground nutmeg",emoji:"🌰",unit:"tsp",qty:3,low:1,price:0.30},
+    {id:"rum",name:"Dark rum",emoji:"🥃",unit:"tsp",qty:24,low:3,price:0.20}
   ],
   recipes:[
     // {id:"cookies",name:"Chocolate chip cookies",emoji:"🍪",makes:"24 cookies",items:[["flour",2.25],["butter",2],["sugar",0.75],["brown",0.75],["eggs",2],["vanilla",1],["soda",1],["salt",1],["chips",2]]},
@@ -225,6 +232,7 @@ const DEFAULTS = {
     {id:"creampuffs",name:"Cream puffs",emoji:"🧁",makes:"20 cream puffs",items:[["milk",1],["cream",1],["sugar",0.5],["vanillabean",1],["salt",0.5],["eggs",9],["cornstarch",3],["butter",1.5],["flour",1],["powdered",0.25]]},
     {id:"pudding",name:"Vanilla pudding",emoji:"🍮",makes:"5 servings",items:[["sugar",0.33],["cornstarch",3],["salt",0.5],["milk",2],["butter",0.125],["vanilla",1]]},
     {id:"cheesecake",name:"Strawberry cheesecake",emoji:"🍰",makes:"5 servings",items:[["strawberries",1],["sugar",0.25],["lemons",0.5],["graham",1.5],["butter",0.5],["creamcheese",2],["condensed",1.25],["vanilla",1]]},
+    {id:"falltart",name:"Fall tart",emoji:"🥧",makes:"1 tart",items:[["hazelnuts",0.5],["powdered",0.5],["flour",1],["salt",0.25],["butter",1.25],["eggs",3],["pumpkin",1],["brown",0.5],["cream",0.75],["sourcream",2],["cinnamon",0.75],["ginger",0.75],["cloves",0.06],["nutmeg",0.06],["rum",1.5],["vanilla",1]]},
     
     // {id:"pie",name:"Apple pie",emoji:"🥧",makes:"1 pie",items:[["flour",2.5],["butter",2],["sugar",0.75],["apples",6],["cinnamon",1],["salt",1]]},
     // {id:"muffins",name:"Blueberry muffins",emoji:"🧁",makes:"12 muffins",items:[["flour",2],["sugar",1],["butter",1],["eggs",2],["milk",0.5],["berries",2],["soda",1],["salt",0.5]]},
@@ -247,7 +255,7 @@ const SUPPLIERS=[
   {id:"bulkbarn",name:"Bulk Barn",emoji:"🫘",base:0.86,fresh:1.15},
   {id:"farm",name:"Local farm stand",emoji:"🚜",base:1.10,fresh:0.74}
 ];
-const FRESH=["eggs","milk","apples","berries","lemons","bananas","butter","cream","strawberries","creamcheese"];
+const FRESH=["eggs","milk","apples","berries","lemons","bananas","butter","cream","strawberries","creamcheese","sourcream"];
 const EMOJIS=["🌾","🧊","🟫","🧈","🥚","🥛","🍫","🌼","🫙","🧂","🪵","🍎","🍏","🫐","🍓","🍒","🍋","🍌","🥕","🎃","🥜","🌰","🥥","🍯","🍑","🍐","🧀","🍞","🥐","🥖","🍪","🥧","🧁","🍰","🎂","🍩","🥨","🌀","🍮","🫓","🍊","🍍","🫚","🧃","☕","🍵"];
 
 /* ---------- state + storage ---------- */
