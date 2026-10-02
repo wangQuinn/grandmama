@@ -109,8 +109,6 @@ nav.tabs{display:flex;gap:6px;flex-wrap:wrap}
 .price{font-weight:800;font-size:26px}
 .total{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;padding-top:14px;border-top:3px solid var(--line);font-size:24px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
 .note{font-size:17px;color:var(--soft);margin-top:10px;max-width:62ch}
-.ai{margin-top:22px;border-left:6px solid var(--yellow);padding:14px 18px;background:var(--paper)}
-.ai ul{margin:8px 0 0;padding-left:24px}
 
 .pcard.low{border-color:var(--orange)}
 .pcard .amt{font-weight:800;font-size:40px;margin-top:6px;line-height:1.1}
@@ -236,8 +234,8 @@ const EMOJIS=["🌾","🧊","🟫","🧈","🥚","🥛","🍫","🌼","🫙","�
 
 /* ---------- state + storage ---------- */
 let S = load();
-let ui = {tab:"bake", stage:"plan", cart:[], ai:null, aiBusy:false, alt:{}, lastBake:[], swipeIdx:0, morningOpen:false};
-let db=null, docRef=null, sample=null, saveTimer=null;
+let ui = {tab:"bake", stage:"plan", cart:[], alt:{}, lastBake:[], swipeIdx:0, morningOpen:false};
+let db=null, docRef=null, saveTimer=null;
 
 function load(){
   try{ const raw=localStorage.getItem("grandma-bakery"); if(raw) return Object.assign(structuredClone(DEFAULTS),JSON.parse(raw)); }catch(e){}
@@ -251,7 +249,6 @@ function save(){
 (async()=>{
   if(!window.claude||!window.claude.use) return;
   try{
-    sample = await window.claude.use("sample");
     db = await window.claude.use("db");
     const user = await window.claude.use("user");
     if(db && user){
@@ -394,7 +391,6 @@ function checkHTML(){
         <div class="price">${money(c.total)}</div></label>`;}).join("")}</div>
     <div class="total"><span>Total</span><span class="price">${money(total)}</span></div>
     <p class="note">Prices are estimates. Saying yes adds these to your pantry and saves the order so you can pick it up or call it in.</p>
-    ${sample?`<div class="ai">${ui.aiBusy?"Claude is looking over your list…":ui.ai?ui.ai:`<button class="btn" data-act="aiPrices">🤖 Ask Claude for ways to save</button>`}</div>`:""}
     <div class="actions">
       <button class="btn big" data-act="buy" ${total?"":"disabled"}>Yes, order these</button>
       <button class="btn" data-act="nobuy">No, not today</button>
@@ -415,8 +411,7 @@ function altHTML(){
       <div class="count">${n}<small>batch${n===1?"":"es"}</small></div>
       <button class="round plus" data-act="altinc" data-id="${r.id}" data-max="${max}" aria-label="One more" ${n>=max?"disabled":""}>+</button></div></div></div>`;}).join("")}</div>
     <div class="actions"><button class="btn big" data-act="bakealt" ${Object.values(ui.alt).some(Boolean)?"":"disabled"}>Bake these</button></div>`
-  :`<div class="card"><div class="name">The pantry is too bare for any recipe right now.</div><p class="sub">Go back and order a few things, or add what you have in the Pantry tab.</p></div>`}
-  ${sample?`<div class="ai">${ui.aiBusy?"Claude is thinking up ideas…":ui.ai?ui.ai:`<button class="btn" data-act="aiIdeas">🤖 Ask Claude for other ideas</button>`}</div>`:""}`;
+  :`<div class="card"><div class="name">The pantry is too bare for any recipe right now.</div><p class="sub">Go back and order a few things, or add what you have in the Pantry tab.</p></div>`}`;
 }
 
 function liveHTML(){
@@ -516,36 +511,13 @@ function decide(v){
   setTimeout(()=>{S.deals[d.s.id+"|"+d.i.id]=v;save();render();},200);
 }
 
-/* ---------- AI ---------- */
-async function askAI(kind){
-  if(!sample) return;
-  ui.aiBusy=true; render();
-  try{
-    let res;
-    if(kind==="prices"){
-      const list=ui.cart.map(c=>{const i=ING(c.iid);return {item:i.name,amount:c.buy+" "+i.unit,options:SUPPLIERS.map(s=>({store:s.name,price_each:priceAt(s,i)}))}});
-      res=await sample.json(`You are helping a grandmother who runs a small home bakery save money on ingredients. Here is her shopping list with estimated prices at nearby stores: ${JSON.stringify(list)}.
-Give warm, plain-language advice in short sentences a 75-year-old can read easily. Return ONLY JSON: {"summary":"one sentence on the cheapest way to shop this list, e.g. which one or two stores","tips":["2 to 4 short money-saving tips specific to these ingredients, like buying in bulk, freezing butter, or seasonal fruit"]}`,{modelTier:"quick"});
-      ui.ai=`<div class="name" style="font-size:22px">🤖 ${esc(res.summary||"")}</div><ul>${(res.tips||[]).map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
-    } else {
-      const pantry=S.ingredients.filter(i=>i.qty>0).map(i=>`${qty(i.qty)} ${i.unit} ${i.name}`);
-      res=await sample.json(`A grandmother who runs a small home bakery has these ingredients: ${pantry.join("; ")}. Suggest 3 simple baked goods she could make using only these (pantry staples like water are fine). Use plain, friendly language. Return ONLY JSON: {"ideas":[{"emoji":"one food emoji","name":"short name","why":"one short sentence on what it uses"}]}`,{modelTier:"quick"});
-      ui.ai=`<div class="name" style="font-size:22px">🤖 Other things you could make</div><ul>${(res.ideas||[]).map(d=>`<li>${esc(d.emoji||"")} <b>${esc(d.name)}</b>: ${esc(d.why)}</li>`).join("")}</ul>`;
-    }
-  }catch(e){
-    if(e&&e.code==="not_granted"){ sample=null; ui.ai=null; }
-    else ui.ai=`<div class="sub">Claude couldn't answer just now. Try the button again in a minute.</div><button class="btn" data-act="${kind==="prices"?"aiPrices":"aiIdeas"}" style="margin-top:10px">Try again</button>`;
-  }
-  ui.aiBusy=false; render();
-}
-
 /* ---------- baking ---------- */
 function deduct(plan){
   const need=needsFor(plan);
   for(const [iid,n] of Object.entries(need)){ const i=ING(iid); if(i) i.qty=Math.max(0,Math.round((i.qty-n)*100)/100); }
   ui.lastBake=Object.entries(plan).filter(([,n])=>n).map(([rid,n])=>{const r=S.recipes.find(x=>x.id===rid);return {emoji:r.emoji,name:r.name,n}});
   S.plan={}; save();
-  ui.stage="live"; ui.ai=null; render(); window.scrollTo(0,0);
+  ui.stage="live"; render(); window.scrollTo(0,0);
 }
 
 /* ---------- dialogs ---------- */
@@ -597,12 +569,12 @@ document.addEventListener("click",e=>{
   const a=el.dataset.act, id=el.dataset.id;
   if(a==="cartToggle"||a==="chan") return;
   switch(a){
-    case "tab": ui.tab=id; ui.ai=null; if(id==="bake"&&ui.stage==="live") ui.stage="plan"; render(); window.scrollTo(0,0); break;
+    case "tab": ui.tab=id; if(id==="bake"&&ui.stage==="live") ui.stage="plan"; render(); window.scrollTo(0,0); break;
     case "inc": S.plan[id]=(S.plan[id]||0)+1; save(); render(); break;
     case "dec": S.plan[id]=Math.max(0,(S.plan[id]||0)-1); save(); render(); break;
-    case "letsbake": ui.cart=buildCart(); ui.ai=null; ui.stage="check"; render(); window.scrollTo(0,0); break;
+    case "letsbake": ui.cart=buildCart(); ui.stage="check"; render(); window.scrollTo(0,0); break;
     case "back": ui.stage="plan"; render(); break;
-    case "backcheck": ui.stage="check"; ui.ai=null; render(); break;
+    case "backcheck": ui.stage="check"; render(); break;
     case "startbake": deduct(S.plan); break;
     case "buy": {
       const lines=ui.cart.filter(c=>c.on);
@@ -614,7 +586,7 @@ document.addEventListener("click",e=>{
       else deduct(S.plan);
       break; }
     case "nobuy":
-      if(ui.cart.some(c=>c.required)){ ui.alt={}; ui.ai=null; ui.stage="alt"; render(); window.scrollTo(0,0); }
+      if(ui.cart.some(c=>c.required)){ ui.alt={}; ui.stage="alt"; render(); window.scrollTo(0,0); }
       else deduct(S.plan);
       break;
     case "altinc": ui.alt[id]=Math.min(+el.dataset.max,(ui.alt[id]||0)+1); render(); break;
@@ -624,8 +596,6 @@ document.addEventListener("click",e=>{
       const short=Object.entries(need).find(([iid,n])=>ING(iid).qty+1e-9<n);
       if(short){ toast(`Not enough ${ING(short[0]).name.toLowerCase()} for all of these. Try fewer batches.`); break; }
       S.plan={...ui.alt}; deduct(S.plan); break; }
-    case "aiPrices": askAI("prices"); break;
-    case "aiIdeas": askAI("ideas"); break;
     case "home": ui.stage="plan"; render(); window.scrollTo(0,0); break;
     case "pinc": { const i=ING(id); i.qty=Math.round((i.qty+1)*100)/100; save(); render(); break; }
     case "pdec": { const i=ING(id); i.qty=Math.max(0,Math.round((i.qty-1)*100)/100); save(); render(); break; }
