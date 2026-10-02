@@ -206,11 +206,25 @@ const DEFAULTS = {
     {id:"apples",name:"Baking apples",emoji:"🍎",unit:"apples",qty:4,low:6,price:0.70},
     {id:"berries",name:"Blueberries",emoji:"🫐",unit:"cups",qty:3,low:2,price:2.20},
     {id:"lemons",name:"Lemons",emoji:"🍋",unit:"lemons",qty:3,low:2,price:0.80},
-    {id:"bananas",name:"Ripe bananas",emoji:"🍌",unit:"bananas",qty:5,low:3,price:0.30}
+    {id:"bananas",name:"Ripe bananas",emoji:"🍌",unit:"bananas",qty:5,low:3,price:0.30},
+    {id:"cream",name:"Heavy cream",emoji:"🥛",unit:"cups",qty:2,low:1,price:1.00},
+    {id:"cornstarch",name:"Cornstarch",emoji:"🫙",unit:"tbsp",qty:12,low:3,price:0.10},
+    {id:"powdered",name:"Powdered sugar",emoji:"🧊",unit:"cups",qty:2,low:0.5,price:0.60},
+    {id:"vanillabean",name:"Vanilla beans",emoji:"🌼",unit:"beans",qty:2,low:1,price:3.00},
+    {id:"almonds",name:"Sliced almonds",emoji:"🌰",unit:"tbsp",qty:12,low:6,price:0.15},
+    {id:"honey",name:"Honey",emoji:"🍯",unit:"tbsp",qty:16,low:4,price:0.20},
+    {id:"condensed",name:"Sweetened condensed milk",emoji:"🥫",unit:"cups",qty:1.25,low:1,price:2.00},
+    {id:"compote",name:"Berry compote",emoji:"🫐",unit:"cups",qty:1,low:1,price:2.50},
+    {id:"strawberries",name:"Fresh strawberries",emoji:"🍓",unit:"lbs",qty:1,low:1,price:3.00},
+    {id:"graham",name:"Graham cracker crumbs",emoji:"🍪",unit:"cups",qty:1.5,low:1,price:0.80},
+    {id:"creamcheese",name:"Cream cheese",emoji:"🧀",unit:"8-oz blocks",qty:2,low:2,price:2.50}
   ],
   recipes:[
     // {id:"cookies",name:"Chocolate chip cookies",emoji:"🍪",makes:"24 cookies",items:[["flour",2.25],["butter",2],["sugar",0.75],["brown",0.75],["eggs",2],["vanilla",1],["soda",1],["salt",1],["chips",2]]},
-    {id: "parfait", name:"Berry-licious Parfait", emoji: "", makes: "3", itmes:[["sliced almonds", 6],["honey", 3], ["cream", 2], ["lemon zest", 1], ["vanilla extract", 1], ["condensed milk", 1.75], ["berry compote", 1]]},
+    {id:"parfait",name:"Berry-licious parfait",emoji:"🍨",makes:"3 parfaits",items:[["almonds",6],["honey",3],["cream",2],["lemons",0.33],["vanilla",1],["condensed",1.75],["compote",1]]},
+    {id:"creampuffs",name:"Cream puffs",emoji:"🧁",makes:"20 cream puffs",items:[["milk",1],["cream",1],["sugar",0.5],["vanillabean",1],["salt",0.5],["eggs",9],["cornstarch",3],["butter",1.5],["flour",1],["powdered",0.25]]},
+    {id:"pudding",name:"Vanilla pudding",emoji:"🍮",makes:"5 servings",items:[["sugar",0.33],["cornstarch",3],["salt",0.5],["milk",2],["butter",0.125],["vanilla",1]]},
+    {id:"cheesecake",name:"Strawberry cheesecake",emoji:"🍰",makes:"5 servings",items:[["strawberries",1],["sugar",0.25],["lemons",0.5],["graham",1.5],["butter",0.5],["creamcheese",2],["condensed",1.25],["vanilla",1]]},
     
     // {id:"pie",name:"Apple pie",emoji:"🥧",makes:"1 pie",items:[["flour",2.5],["butter",2],["sugar",0.75],["apples",6],["cinnamon",1],["salt",1]]},
     // {id:"muffins",name:"Blueberry muffins",emoji:"🧁",makes:"12 muffins",items:[["flour",2],["sugar",1],["butter",1],["eggs",2],["milk",0.5],["berries",2],["soda",1],["salt",0.5]]},
@@ -233,7 +247,7 @@ const SUPPLIERS=[
   {id:"bulkbarn",name:"Bulk Barn",emoji:"🫘",base:0.86,fresh:1.15},
   {id:"farm",name:"Local farm stand",emoji:"🚜",base:1.10,fresh:0.74}
 ];
-const FRESH=["eggs","milk","apples","berries","lemons","bananas","butter"];
+const FRESH=["eggs","milk","apples","berries","lemons","bananas","butter","cream","strawberries","creamcheese"];
 const EMOJIS=["🌾","🧊","🟫","🧈","🥚","🥛","🍫","🌼","🫙","🧂","🪵","🍎","🍏","🫐","🍓","🍒","🍋","🍌","🥕","🎃","🥜","🌰","🥥","🍯","🍑","🍐","🧀","🍞","🥐","🥖","🍪","🥧","🧁","🍰","🎂","🍩","🥨","🌀","🍮","🫓","🍊","🍍","🫚","🧃","☕","🍵"];
 
 /* ---------- state + storage ---------- */
